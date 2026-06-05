@@ -1,3 +1,4 @@
+// src/main/java/com/example/demo/entity/Address.java
 package com.example.demo.entity;
 
 import lombok.Data;
@@ -10,24 +11,26 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
-public class User {
-
+@Table(name = "address")
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String username;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(nullable = false)
-    private String password;   // 存储 BCrypt 加密后的密文
+    private String receiverName;
+    private String phone;
+    private String province;
+    private String city;
+    private String district;
+    private String detail;
+    private Boolean isDefault = false;
 
-    @Column(nullable = false, length = 20)
-    private String role = "user";   // 默认普通用户
-
-    @Column(name = "create_time", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_time", updatable = false)
     private Date createTime;
 
     @PrePersist

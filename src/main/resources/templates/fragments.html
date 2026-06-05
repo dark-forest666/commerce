@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!-- 导航栏片段，接收 role 参数 -->
+<div th:fragment="navbar(role)">
+    <nav style="background-color:#f0f0f0; padding:10px; margin-bottom:20px;">
+        <a th:href="@{/products}" style="margin-right:15px;">商品列表</a>
+        <a th:href="@{/cart}" style="margin-right:15px;">购物车</a>
+        <a th:href="@{/order/myOrders}" style="margin-right:15px;">我的订单</a>
+        <a th:href="@{/address}" style="margin-right:15px;">我的地址</a>
+        <!-- 管理员后台入口 -->
+        <a th:if="${role == 'admin'}" th:href="@{/admin/products}" style="margin-right:15px;">后台管理</a>
+        <a th:href="@{/logout}" style="margin-right:15px;">退出登录</a>
+    </nav>
+</div>
+</body>
+</html>

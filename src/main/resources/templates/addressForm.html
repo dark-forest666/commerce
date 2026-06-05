@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑地址</title>
+</head>
+<body>
+<div th:replace="fragments :: navbar(${session.role})"></div>
+<h2 th:text="${address.id} ? '编辑地址' : '新增地址'">地址表单</h2>
+<form th:action="@{/address/save}" th:object="${address}" method="post">
+    <input type="hidden" th:field="*{id}" />
+    <label>收货人姓名：</label><input type="text" th:field="*{receiverName}" required/><br/>
+    <label>手机号：</label><input type="text" th:field="*{phone}" required/><br/>
+    <label>省：</label><input type="text" th:field="*{province}" required/><br/>
+    <label>市：</label><input type="text" th:field="*{city}" required/><br/>
+    <label>区/县：</label><input type="text" th:field="*{district}" required/><br/>
+    <label>详细地址：</label><input type="text" th:field="*{detail}" required/><br/>
+    <label>设为默认地址：</label><input type="checkbox" th:field="*{isDefault}" value="true"/><br/>
+    <button type="submit">保存</button>
+    <a href="/address">返回</a>
+</form>
+</body>
+</html>

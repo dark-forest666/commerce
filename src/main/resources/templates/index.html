@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<div th:replace="fragments :: navbar(${session.role})"></div>
+<h2>欢迎, <span th:text="${session.username}"></span>！</h2>
+<p>这是受保护的首页，只有登录后才能看到。</p>
+</body>
+</html>

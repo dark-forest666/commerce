@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>订单确认</title>
+    <style>
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        .total { text-align: right; margin-top: 20px; font-size: 1.2em; }
+        .address { margin: 20px auto; width: 80%; border: 1px solid #ddd; padding: 10px; }
+    </style>
 </head>
 <body>
-
+<div th:replace="fragments :: navbar(${session.role})"></div>
+<h2>确认订单</h2>
+<div class="address">
+    <h3>选择收货地址</h3>
+    <form th:action="@{/order/create}" method="post">
+        <div th:each="addr : ${addresses}">
+            <input type="radio" name="addressId" th:value="${addr.id}" required />
+            <span th:text="${addr.receiverName} + '，' + ${addr.phone} + '，' + ${addr.province} + ${addr.city} + ${addr.district} + ${addr.detail}"></span>
+            <span th:if="${addr.isDefault}" style="color:red;">【默认】</span><br/>
+        </div>
+        <hr/>
+        <h3>商品清单</h3>
+        <table>
+            <tr><th>商品</th><th>单价</th><th>数量</th><th>小计</th></tr>
+            <tr th:each="item : ${selectedItems}">
+                <td th:text="${item.product.name}"></td>
+                <td th:text="'￥' + ${item.product.price}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="'￥' + ${item.product.price * item.quantity}"></td>
+            </tr>
+        </table>
+        <div class="total">总金额：<span th:text="'￥' + ${totalPrice}"></span></div>
+        <button type="submit">提交订单</button>
+    </form>
+</div>
 </body>
 </html>
