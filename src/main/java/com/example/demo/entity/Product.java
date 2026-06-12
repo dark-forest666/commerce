@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/entity/Product.java
 package com.example.demo.entity;
 
 import lombok.Data;
@@ -26,7 +25,10 @@ public class Product {
     @Column(length = 500)
     private String description;
 
-    private String imageUrl;   // 商品图片URL
+    private String imageUrl; // 商品图片URL
 
     private Integer status = 1; // 1-上架 0-下架
+
+    // 新增：分类ID
+    private Long categoryId;
 }

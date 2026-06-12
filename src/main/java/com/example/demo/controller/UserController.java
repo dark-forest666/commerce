@@ -1,5 +1,4 @@
 package com.example.demo.controller;
-
 import com.example.demo.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,15 +7,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
 public class UserController {
-
     @Autowired
     private UserService userService;
+
+    // 核心修改：根路径直接重定向到登录页
+    @GetMapping("/")
+    public String rootRedirect() {
+        return "redirect:/login";
+    }
 
     // 显示注册页面
     @GetMapping("/register")
@@ -38,7 +41,6 @@ public class UserController {
             model.addAttribute("error", "密码长度至少6位");
             return "register";
         }
-
         boolean success = userService.register(username.trim(), password);
         if (success) {
             log.info("注册成功，跳转登录页: {}", username);

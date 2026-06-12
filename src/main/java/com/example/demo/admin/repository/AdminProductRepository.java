@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.example.demo.admin.repository;
 
 import com.example.demo.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,11 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
-    // 查询所有上架的商品
-    List<Product> findByStatus(Integer status);
-
-    // 新增：查询库存预警商品（库存≤5）
+public interface AdminProductRepository extends JpaRepository<Product, Long> {
+    // 查询库存预警商品（库存≤5）
     @Query("SELECT p FROM Product p WHERE p.stock <= 5")
     List<Product> findLowStockProducts();
 }

@@ -35,6 +35,13 @@ public class Order {
     @JoinColumn(name = "address_id")
     private Address address;
 
+    // 新增：快递单号
+    private String expressNo;
+
+    // 新增：管理员备注
+    @Column(length = 500)
+    private String adminRemark;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
