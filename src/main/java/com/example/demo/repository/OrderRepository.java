@@ -36,4 +36,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     // 新增：统计指定时间范围内的销售额
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.createTime BETWEEN :start AND :end AND o.status >= 1")
     Double getSalesByTimeRange(@Param("start") Date start, @Param("end") Date end);
+
+    Order findByOrderNo(String orderNo);
 }

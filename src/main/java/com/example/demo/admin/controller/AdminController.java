@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes; // 【必须添加】缺失的导入
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -123,7 +123,8 @@ public class AdminController {
     }
 
     @PostMapping("/products/save")
-    public String saveProduct(@ModelAttribute Product product, HttpSession session, HttpServletRequest request) {
+    public String saveProduct(@ModelAttribute Product product, 
+                              HttpSession session, HttpServletRequest request) {
         adminProductService.saveProduct(product);
         operationLogService.logOperation((Long) session.getAttribute("userId"), "保存商品：" + product.getName(), request);
         return "redirect:/admin/products";

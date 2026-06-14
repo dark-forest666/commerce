@@ -97,6 +97,23 @@ public class OrderService {
         return order;
     }
 
+    // 根据订单号查询订单
+    public Order getOrderByOrderNo(String orderNo) {
+        return orderRepository.findByOrderNo(orderNo);  // 需要在OrderRepository中添加
+    }
+
+    // 新增：根据订单ID查询订单
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+
+    // 更新订单
+    @Transactional
+    public void updateOrder(Order order) {
+        orderRepository.save(order);
+    }
+
+
     /**
      * 取消订单（仅待支付状态可取消，恢复库存）
      */

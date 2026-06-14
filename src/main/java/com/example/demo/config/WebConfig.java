@@ -23,7 +23,8 @@ public class WebConfig implements WebMvcConfigurer {
                     "/css/**", 
                     "/js/**", 
                     "/images/**", 
-                    "/products"
+                    "/products",
+                    "/pay/**"// <-- 新增这一行：放行所有支付相关路径（包括同步和异步回调）
                 );
     }
 }
