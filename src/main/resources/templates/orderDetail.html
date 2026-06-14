@@ -36,10 +36,7 @@
     </tr>
 </table>
 <div style="text-align:center; margin-top:20px;">
-    <form th:action="@{/order/simulatePay}" method="post" style="display:inline;">
-        <input type="hidden" name="orderId" th:value="${order.id}" />
-        <button type="submit" th:if="${order.status == 0}">模拟支付</button>
-    </form>
+    <a th:if="${order.status == 0}" th:href="@{/pay/page(orderId=${order.id})}" class="btn" style="display:inline-block; margin-right:10px;">去支付</a>
     <form th:action="@{/order/cancel}" method="post" style="display:inline;">
         <input type="hidden" name="orderId" th:value="${order.id}" />
         <button type="submit" th:if="${order.status == 0}" onclick="return confirm('确定取消订单吗？');">取消订单</button>
