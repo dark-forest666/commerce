@@ -17,12 +17,9 @@ public class AdminProductService {
     @Autowired
     private CartItemRepository cartItemRepository;
     
-    // 获取所有商品（含下架）
     public List<Product> getAllProducts() {
         return adminProductRepository.findAll();
     }
-    
-    // 新增/保存商品
     @Transactional
     public void saveProduct(Product product) {
         adminProductRepository.save(product);
