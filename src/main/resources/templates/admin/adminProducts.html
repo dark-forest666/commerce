@@ -2,58 +2,68 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>商品管理</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>商品管理 - Commerce 后台</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <nav th:replace="~{admin/fragments :: navbar}"></nav>
 
-    <div class="container mt-4">
-        <h2 class="mb-4">商品管理</h2>
-        <a href="/admin/products/add" class="btn btn-primary mb-3">新增商品</a>
+    <div class="admin-content">
+        <h2 style="margin-bottom: 24px;">商品管理</h2>
         
-        <form th:action="@{/admin/products/batchToggle}" method="post" class="mb-3">
-            <button type="submit" name="status" value="1" class="btn btn-success">批量上架</button>
-            <button type="submit" name="status" value="0" class="btn btn-warning">批量下架</button>
-            <button type="submit" formaction="/admin/products/batchDelete" class="btn btn-danger" onclick="return confirm('确定删除选中商品吗？')">批量删除</button>
-        </form>
-
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" id="selectAll"></th>
-                    <th>ID</th>
-                    <th>名称</th>
-                    <th>价格</th>
-                    <th>库存</th>
-                    <th>分类</th>
-                    <th>状态</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="product : ${products}">
-                    <td><input type="checkbox" name="ids" th:value="${product.id}"></td>
-                    <td th:text="${product.id}">1</td>
-                    <td th:text="${product.name}">商品名</td>
-                    <td th:text="'￥' + ${product.price}">￥99.9</td>
-                    <td th:class="${product.stock <=5} ? 'text-danger' : ''" th:text="${product.stock}">100</td>
-                    <td>
-                        <span th:each="cat : ${categories}" th:if="${cat.id == product.categoryId}" th:text="${cat.name}"></span>
-                        <span th:if="${product.categoryId == null}">未分类</span>
-                    </td>
-                    <td>
-                        <span th:if="${product.status == 1}" class="badge bg-success">上架</span>
-                        <span th:if="${product.status == 0}" class="badge bg-secondary">下架</span>
-                    </td>
-                    <td>
-                        <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-sm btn-primary">编辑</a>
-                        <a th:href="@{/admin/products/toggleStatus/{id}(id=${product.id})}" class="btn btn-sm btn-warning" th:text="${product.status == 1} ? '下架' : '上架'">下架</a>
-                        <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" class="btn btn-sm btn-danger" onclick="return confirm('确定删除吗？')">删除</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <a href="/admin/products/add" class="btn btn-primary">新增商品</a>
+            
+            <form th:action="@{/admin/products/batchToggle}" method="post">
+                <button type="submit" name="status" value="1" class="btn btn-success btn-sm">批量上架</button>
+                <button type="submit" name="status" value="0" class="btn btn-warning btn-sm" style="margin-left: 8px;">批量下架</button>
+                <button type="submit" formaction="/admin/products/batchDelete" class="btn btn-danger btn-sm" style="margin-left: 8px;" onclick="return confirm('确定删除选中商品吗？')">批量删除</button>
+            </form>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">商品列表</div>
+            <div class="card-body">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>ID</th>
+                                <th>名称</th>
+                                <th>价格</th>
+                                <th>库存</th>
+                                <th>分类</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="product : ${products}">
+                                <td><input type="checkbox" name="ids" th:value="${product.id}"></td>
+                                <td th:text="${product.id}">1</td>
+                                <td th:text="${product.name}">商品名</td>
+                                <td>￥<span th:text="${product.price}">99.9</span></td>
+                                <td th:class="${product.stock <=5} ? 'text-danger'" th:text="${product.stock}">100</td>
+                                <td>
+                                    <span th:each="cat : ${categories}" th:if="${cat.id == product.categoryId}" th:text="${cat.name}"></span>
+                                    <span th:if="${product.categoryId == null}">未分类</span>
+                                </td>
+                                <td>
+                                    <span th:if="${product.status == 1}" class="badge badge-success">上架</span>
+                                    <span th:if="${product.status == 0}" class="badge badge-secondary">下架</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn btn-primary btn-sm">编辑</a>
+                                    <a th:href="@{/admin/products/toggleStatus/{id}(id=${product.id})}" class="btn btn-warning btn-sm" style="margin-left: 4px;" th:text="${product.status == 1} ? '下架' : '上架'">下架</a>
+                                    <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm" style="margin-left: 4px;" onclick="return confirm('确定删除吗？')">删除</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>

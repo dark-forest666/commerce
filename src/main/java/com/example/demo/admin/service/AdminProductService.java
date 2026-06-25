@@ -25,12 +25,10 @@ public class AdminProductService {
         adminProductRepository.save(product);
     }
     
-    // 根据ID获取商品
     public Product getProductById(Long id) {
         return adminProductRepository.findById(id).orElseThrow(() -> new RuntimeException("商品不存在"));
     }
     
-    // 删除商品（前置校验：未被加入购物车）
     @Transactional
     public void deleteProduct(Long id) {
         Product product = getProductById(id);
@@ -40,7 +38,6 @@ public class AdminProductService {
         adminProductRepository.delete(product);
     }
     
-    // 上下架切换
     @Transactional
     public void toggleProductStatus(Long id) {
         Product product = getProductById(id);
@@ -48,7 +45,6 @@ public class AdminProductService {
         adminProductRepository.save(product);
     }
     
-    // 批量上下架
     @Transactional
     public void batchToggleStatus(List<Long> ids, Integer status) {
         for (Long id : ids) {
@@ -58,7 +54,6 @@ public class AdminProductService {
         }
     }
     
-    // 批量删除
     @Transactional
     public void batchDelete(List<Long> ids) {
         for (Long id : ids) {
@@ -66,7 +61,6 @@ public class AdminProductService {
         }
     }
     
-    // 获取库存预警商品
     public List<Product> getLowStockProducts() {
         return adminProductRepository.findLowStockProducts();
     }

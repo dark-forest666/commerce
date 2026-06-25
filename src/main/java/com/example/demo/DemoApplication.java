@@ -108,7 +108,7 @@ public class DemoApplication {
             p1.setPrice(199.9);
             p1.setStock(50);
             p1.setDescription("高品质无线蓝牙耳机，续航24小时");
-            p1.setImageUrl("https://picsum.photos/150/120?random=1");
+            p1.setImageUrl("/product-images/蓝牙耳机.png");
             p1.setStatus(1);
             p1.setCategoryId(1L); // 电子产品分类
             productRepository.save(p1);
@@ -118,7 +118,7 @@ public class DemoApplication {
             p2.setPrice(89.0);
             p2.setStock(100);
             p2.setDescription("100%纯棉，舒适透气");
-            p2.setImageUrl("https://picsum.photos/150/120?random=2");
+            p2.setImageUrl("/product-images/纯棉T恤.png");
             p2.setStatus(1);
             p2.setCategoryId(2L); // 服装鞋帽分类
             productRepository.save(p2);
@@ -128,7 +128,7 @@ public class DemoApplication {
             p3.setPrice(29.9);
             p3.setStock(200);
             p3.setDescription("550ml*24瓶，天然矿泉水");
-            p3.setImageUrl("https://picsum.photos/150/120?random=3");
+            p3.setImageUrl("/product-images/矿泉水.png");
             p3.setStatus(1);
             p3.setCategoryId(3L); // 食品饮料分类
             productRepository.save(p3);

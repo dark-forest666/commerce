@@ -2,46 +2,102 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>订单详情</title>
-    <style>
-        table { width: 80%; margin: auto; border-collapse: collapse; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-        .info { width: 80%; margin: auto; border: 1px solid #ddd; padding: 10px; }
-    </style>
+    <title>订单详情 - Commerce</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <div th:replace="fragments :: navbar(${session.role})"></div>
-<h2>订单详情</h2>
-<div class="info">
-    <p>订单号：<span th:text="${order.orderNo}"></span></p>
-    <p>订单状态：
-        <span th:if="${order.status == 0}">待支付</span>
-        <span th:if="${order.status == 1}">已支付</span>
-        <span th:if="${order.status == 2}">已发货</span>
-        <span th:if="${order.status == 3}">已完成</span>
-        <span th:if="${order.status == 4}">已取消</span>
-    </p>
-    <p>总金额：<span th:text="'￥' + ${order.totalAmount}"></span></p>
-    <p>收货地址：<span th:text="${order.address.receiverName} + '，' + ${order.address.phone} + '，' + ${order.address.province} + ${order.address.city} + ${order.address.district} + ${order.address.detail}"></span></p>
-    <p>创建时间：<span th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
-</div>
-<h3>商品清单</h3>
-<table>
-    <tr><th>商品</th><th>单价</th><th>数量</th><th>小计</th></tr>
-    <tr th:each="item : ${order.orderItems}">
-        <td th:text="${item.product.name}"></td>
-        <td th:text="'￥' + ${item.price}"></td>
-        <td th:text="${item.quantity}"></td>
-        <td th:text="'￥' + ${item.price * item.quantity}"></td>
-    </tr>
-</table>
-<div style="text-align:center; margin-top:20px;">
-    <a th:if="${order.status == 0}" th:href="@{/pay/page(orderId=${order.id})}" class="btn" style="display:inline-block; margin-right:10px;">去支付</a>
-    <form th:action="@{/order/cancel}" method="post" style="display:inline;">
-        <input type="hidden" name="orderId" th:value="${order.id}" />
-        <button type="submit" th:if="${order.status == 0}" onclick="return confirm('确定取消订单吗？');">取消订单</button>
-    </form>
-    <a href="/order/myOrders">返回我的订单</a>
+
+<section class="page-header">
+    <div class="container">
+        <h1>订单详情</h1>
+        <p>查看订单的详细信息</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">订单基本信息</div>
+        <div class="card-body">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <div>
+                    <span style="color: var(--gray-500); font-size: 0.88rem;">订单号</span>
+                    <div style="font-family: monospace; font-weight: 700; font-size: 1rem;" th:text="${order.orderNo}"></div>
+                </div>
+                <div>
+                    <span style="color: var(--gray-500); font-size: 0.88rem;">订单状态</span>
+                    <div>
+                        <span th:if="${order.status == 0}" class="badge badge-warning">待支付</span>
+                        <span th:if="${order.status == 1}" class="badge badge-primary">已支付</span>
+                        <span th:if="${order.status == 2}" class="badge badge-info">已发货</span>
+                        <span th:if="${order.status == 3}" class="badge badge-success">已完成</span>
+                        <span th:if="${order.status == 4}" class="badge badge-secondary">已取消</span>
+                    </div>
+                </div>
+                <div>
+                    <span style="color: var(--gray-500); font-size: 0.88rem;">总金额</span>
+                    <div style="font-weight: 700; color: var(--danger); font-size: 1.2rem;">￥<span th:text="${order.totalAmount}"></span></div>
+                </div>
+                <div>
+                    <span style="color: var(--gray-500); font-size: 0.88rem;">创建时间</span>
+                    <div th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">收货地址</div>
+        <div class="card-body">
+            <div style="padding: 16px; background: var(--gray-50); border-radius: var(--radius-sm);">
+                <div style="font-weight: 600; margin-bottom: 8px;">
+                    <span th:text="${order.address.receiverName}"></span>
+                    <span style="color: var(--gray-500); margin-left: 12px;" th:text="${order.address.phone}"></span>
+                </div>
+                <div style="color: var(--gray-600);">
+                    <span th:text="${order.address.province}"></span>
+                    <span th:text="${order.address.city}"></span>
+                    <span th:text="${order.address.district}"></span>
+                    <span th:text="${order.address.detail}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 20px;">
+        <div class="card-header">商品清单</div>
+        <div class="card-body">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                        <th>小计</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${order.orderItems}">
+                        <td th:text="${item.product.name}"></td>
+                        <td>￥<span th:text="${item.price}"></span></td>
+                        <td th:text="${item.quantity}"></td>
+                        <td style="font-weight: 700; color: var(--danger);">￥<span th:text="${item.price * item.quantity}"></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 32px;">
+        <a th:if="${order.status == 0}" th:href="@{/pay/page(orderId=${order.id})}" class="btn btn-primary">去支付</a>
+        <form th:if="${order.status == 0}" th:action="@{/order/cancel}" method="post" style="display: inline; margin-left: 12px;">
+            <input type="hidden" name="orderId" th:value="${order.id}" />
+            <button type="submit" class="btn btn-danger" onclick="return confirm('确定取消订单吗？');">取消订单</button>
+        </form>
+        <a href="/order/myOrders" class="btn btn-secondary" style="margin-left: 12px;">返回我的订单</a>
+    </div>
 </div>
 </body>
 </html>

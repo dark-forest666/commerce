@@ -2,64 +2,159 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>购物车</title>
+    <title>购物车 - Commerce</title>
+    <link rel="stylesheet" href="/style.css">
     <style>
-        table { border-collapse: collapse; width: 80%; margin: auto; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; vertical-align: middle; }
-        .product-img { width: 60px; height: 60px; object-fit: cover; }
-        .total { text-align: right; margin-top: 20px; font-size: 1.2em; }
-        .btn { margin: 0 5px; cursor:pointer; }
-        .quantity-input { width: 60px; text-align: center; }
+        .cart-item-select {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1.5px solid var(--gray-200);
+            background: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .quantity-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            padding: 8px;
+            border: 1.5px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .cart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: #fff;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-100);
+            margin-top: 20px;
+        }
+        .cart-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--danger);
+        }
+        .cart-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        @media (max-width: 768px) {
+            .cart-footer {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
 <div th:replace="fragments :: navbar(${session.role})"></div>
 
-<h2>购物车</h2>
-<table id="cartTable">
-    <thead>
-    <tr><th>选中</th><th>图片</th><th>商品</th><th>单价</th><th>数量</th><th>小计</th><th>操作</th></tr>
-    </thead>
-    <tbody>
-    <tr th:each="item : ${cartItems}" th:data-id="${item.id}">
-        <td class="select-cell">
-            <button class="toggle-select-btn" th:data-id="${item.id}" th:data-selected="${item.selected}">
-                <span th:text="${item.selected} ? '✅' : '⬜'"></span>
-            </button>
-        </td>
-        <td><img class="product-img" th:src="${item.product.imageUrl}" alt="商品图片"></td>
-        <td th:text="${item.product.name}"></td>
-        <td class="unit-price" th:text="${item.product.price}"></td>
-        <td>
-            <button class="decr-btn" th:data-id="${item.id}">-</button>
-            <input type="number" class="quantity-input" th:data-id="${item.id}" th:value="${item.quantity}" min="1" style="width:60px;">
-            <button class="incr-btn" th:data-id="${item.id}">+</button>
-        </td>
-        <td class="subtotal" th:text="'￥' + ${item.product.price * item.quantity}"></td>
-        <td>
-            <button class="remove-btn" th:data-id="${item.id}">删除</button>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<div class="total">
-    选中商品总价：<span id="totalPriceSpan" th:text="'￥' + ${totalPrice}"></span>
-</div>
-<div style="text-align:center; margin-top:20px;">
-    <a href="/products">继续购物</a> | <a href="/order/checkout">去结算</a>
+<section class="page-header">
+    <div class="container">
+        <h1>购物车</h1>
+        <p>管理您的购物清单</p>
+    </div>
+</section>
+
+<div class="container">
+    <div th:if="${#lists.isEmpty(cartItems)}" class="empty-state">
+        <div class="empty-state-icon">🛒</div>
+        <div class="empty-state-text">购物车空空如也</div>
+        <a href="/products" class="btn btn-primary">去购物</a>
+    </div>
+    
+    <div th:unless="${#lists.isEmpty(cartItems)}">
+        <div class="table-wrap">
+            <table id="cartTable">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="selectAll" class="cart-item-select" style="margin: 0;"></th>
+                    <th>商品</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>小计</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cartItems}" th:data-id="${item.id}">
+                    <td>
+                        <input type="checkbox" class="cart-item-select" th:checked="${item.selected}" th:data-id="${item.id}" style="margin: 0;">
+                    </td>
+                    <td style="display: flex; align-items: center; gap: 12px;">
+                        <img class="cart-item-img" th:src="${item.product.imageUrl}" alt="商品图片">
+                        <span th:text="${item.product.name}"></span>
+                    </td>
+                    <td style="font-weight: 600;">￥<span class="unit-price" th:text="${item.product.price}"></span></td>
+                    <td>
+                        <div class="quantity-control">
+                            <button class="quantity-btn decr-btn" th:data-id="${item.id}">-</button>
+                            <input type="number" class="quantity-input" th:data-id="${item.id}" th:value="${item.quantity}" min="1">
+                            <button class="quantity-btn incr-btn" th:data-id="${item.id}">+</button>
+                        </div>
+                    </td>
+                    <td style="font-weight: 700; color: var(--danger);">￥<span class="subtotal" th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 1, 2)}"></span></td>
+                    <td>
+                        <button class="btn btn-danger btn-sm remove-btn" th:data-id="${item.id}">删除</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="cart-footer">
+            <div>
+                <button class="btn btn-secondary btn-sm" id="selectAllBtn">全选</button>
+                <button class="btn btn-secondary btn-sm" id="unselectAllBtn" style="margin-left: 8px;">取消全选</button>
+            </div>
+            <div class="cart-actions">
+                <span class="cart-total">选中商品总价：<span id="totalPriceSpan" th:text="'￥' + ${totalPrice}"></span></span>
+                <a href="/products" class="btn btn-secondary">继续购物</a>
+                <a href="/order/checkout" class="btn btn-primary">去结算</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
     (function() {
-        // 获取 contextPath（如果需要）
         var contextPath = /*[[@{/}]]*/ '';
 
         function updateTotal() {
             let total = 0;
             document.querySelectorAll('#cartTable tbody tr').forEach(row => {
-                const toggleBtn = row.querySelector('.toggle-select-btn');
-                const isSelected = toggleBtn.getAttribute('data-selected') === 'true';
-                if (isSelected) {
+                const checkbox = row.querySelector('.cart-item-select');
+                if (checkbox.checked) {
                     const subtotalText = row.querySelector('.subtotal').innerText;
                     const subtotal = parseFloat(subtotalText.replace('￥', ''));
                     if (!isNaN(subtotal)) total += subtotal;
@@ -107,29 +202,23 @@
             }).catch(err => alert('网络错误'));
         }
 
-        // 绑定事件
         function bindEvents() {
-            // 数量变化
             document.querySelectorAll('.quantity-input').forEach(input => {
                 input.removeEventListener('change', handleQuantityChange);
                 input.addEventListener('change', handleQuantityChange);
             });
-            // + 按钮
             document.querySelectorAll('.incr-btn').forEach(btn => {
                 btn.removeEventListener('click', handleIncr);
                 btn.addEventListener('click', handleIncr);
             });
-            // - 按钮
             document.querySelectorAll('.decr-btn').forEach(btn => {
                 btn.removeEventListener('click', handleDecr);
                 btn.addEventListener('click', handleDecr);
             });
-            // 选中按钮
-            document.querySelectorAll('.toggle-select-btn').forEach(btn => {
-                btn.removeEventListener('click', handleToggleSelect);
-                btn.addEventListener('click', handleToggleSelect);
+            document.querySelectorAll('.cart-item-select').forEach(checkbox => {
+                checkbox.removeEventListener('change', handleToggleSelect);
+                checkbox.addEventListener('change', handleToggleSelect);
             });
-            // 删除按钮
             document.querySelectorAll('.remove-btn').forEach(btn => {
                 btn.removeEventListener('click', handleRemove);
                 btn.addEventListener('click', handleRemove);
@@ -165,14 +254,11 @@
         }
 
         function handleToggleSelect(e) {
-            let btn = e.target.closest('.toggle-select-btn');
-            let cartItemId = btn.getAttribute('data-id');
-            let currentSelected = btn.getAttribute('data-selected') === 'true';
-            let newSelected = !currentSelected;
+            let checkbox = e.target;
+            let cartItemId = checkbox.getAttribute('data-id');
+            let newSelected = checkbox.checked;
             sendToggleSelect(cartItemId, newSelected, () => {
-                btn.setAttribute('data-selected', newSelected);
-                btn.querySelector('span').innerText = newSelected ? '✅' : '⬜';
-                let row = btn.closest('tr');
+                let row = checkbox.closest('tr');
                 let quantity = parseInt(row.querySelector('.quantity-input').value);
                 let price = parseFloat(row.querySelector('.unit-price').innerText);
                 updateSubtotal(row, quantity, price);
@@ -187,11 +273,34 @@
             sendRemove(cartItemId, () => {
                 row.remove();
                 updateTotal();
+                if (document.querySelectorAll('#cartTable tbody tr').length === 0) {
+                    window.location.reload();
+                }
             });
         }
 
+        document.getElementById('selectAll').addEventListener('change', function() {
+            document.querySelectorAll('.cart-item-select').forEach(checkbox => {
+                checkbox.checked = this.checked;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        });
+
+        document.getElementById('selectAllBtn').addEventListener('click', function() {
+            document.querySelectorAll('.cart-item-select').forEach(checkbox => {
+                checkbox.checked = true;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        });
+
+        document.getElementById('unselectAllBtn').addEventListener('click', function() {
+            document.querySelectorAll('.cart-item-select').forEach(checkbox => {
+                checkbox.checked = false;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+        });
+
         bindEvents();
-        // 如果表格动态更新，需要重新绑定，这里没有动态增加行，无需重复绑定
         updateTotal();
     })();
 </script>

@@ -2,11 +2,34 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>首页</title>
+    <title>首页 - Commerce</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <div th:replace="fragments :: navbar(${session.role})"></div>
-<h2>欢迎, <span th:text="${session.username}"></span>！</h2>
-<p>这是受保护的首页，只有登录后才能看到。</p>
+
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">欢迎来到 Commerce</h1>
+            <p class="hero-subtitle">发现优质商品，享受便捷购物体验</p>
+            <a href="/products" class="btn btn-primary btn-lg">浏览商品</a>
+        </div>
+    </div>
+</section>
+
+<section class="container" style="padding: 40px 24px;">
+    <div class="card" style="text-align: center; padding: 40px;">
+        <div style="font-size: 3rem; margin-bottom: 16px;">👋</div>
+        <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 12px;">您好, <span th:text="${session.username}"></span>！</h2>
+        <p style="color: var(--gray-500);">这是受保护的首页，只有登录后才能看到。</p>
+        <div style="margin-top: 32px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <a href="/products" class="btn btn-primary">查看商品</a>
+            <a href="/cart" class="btn btn-secondary">购物车</a>
+            <a href="/order/myOrders" class="btn btn-secondary">我的订单</a>
+        </div>
+    </div>
+</section>
 </body>
 </html>

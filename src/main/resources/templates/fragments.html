@@ -2,18 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<!-- 导航栏片段，接收 role 参数 -->
 <div th:fragment="navbar(role)">
-    <nav style="background-color:#f0f0f0; padding:10px; margin-bottom:20px;">
-        <a th:href="@{/products}" style="margin-right:15px;">商品列表</a>
-        <a th:href="@{/cart}" style="margin-right:15px;">购物车</a>
-        <a th:href="@{/order/myOrders}" style="margin-right:15px;">我的订单</a>
-        <a th:href="@{/address}" style="margin-right:15px;">我的地址</a>
-        <!-- 管理员后台入口 -->
-        <a th:if="${role == 'admin'}" th:href="@{/admin/products}" style="margin-right:15px;">后台管理</a>
-        <a th:href="@{/logout}" style="margin-right:15px;">退出登录</a>
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="/" class="navbar-brand">
+                <div class="navbar-brand-icon">C</div>
+                <span>Commerce</span>
+            </a>
+            <div class="navbar-links">
+                <a th:href="@{/products}" class="nav-link" th:classappend="${#request.requestURI == '/products'} ? 'active'">
+                    <span>商品列表</span>
+                </a>
+                <a th:href="@{/cart}" class="nav-link" th:classappend="${#request.requestURI == '/cart'} ? 'active'">
+                    <span>购物车</span>
+                </a>
+                <a th:href="@{/order/myOrders}" class="nav-link" th:classappend="${#request.requestURI.startsWith('/order/')} ? 'active'">
+                    <span>我的订单</span>
+                </a>
+                <a th:href="@{/address}" class="nav-link" th:classappend="${#request.requestURI.startsWith('/address')} ? 'active'">
+                    <span>我的地址</span>
+                </a>
+                <a th:if="${role == 'admin'}" th:href="@{/admin/index}" class="nav-link">
+                    <span>后台管理</span>
+                </a>
+                <a th:href="@{/logout}" class="nav-link">
+                    <span>退出登录</span>
+                </a>
+            </div>
+        </div>
     </nav>
 </div>
 </body>

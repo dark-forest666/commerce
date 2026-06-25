@@ -2,25 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>支付结果 - 电商系统</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        .container { background: #f9f9f9; border-radius: 8px; padding: 30px; max-width: 500px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h2 { color: #333; }
-        .order-num { font-size: 18px; margin: 20px 0; }
-        .btn { display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; margin-top: 20px; }
-        .btn:hover { background: #0056b3; }
-    </style>
+    <title>支付结果 - Commerce</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-<div class="container">
-    <h2>支付结果通知</h2>
-    <p>您已成功发起支付请求。</p>
-    <div class="order-num">
-        订单号：<span th:text="${outTradeNo}">无订单号</span>
+<body class="bg-mesh">
+    <div th:replace="fragments :: navbar(${session.role})"></div>
+    
+    <div class="container" style="max-width: 520px; margin: 0 auto; padding: 40px 20px;">
+        <div class="card" style="overflow: hidden; animation: fadeInUp 0.5s ease-out;">
+            <div style="background: linear-gradient(135deg, var(--success), #059669); padding: 36px; text-align: center;">
+                <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h1 style="color: white; font-size: 1.6rem; font-weight: 700; margin-bottom: 8px;">支付请求已提交</h1>
+                <p style="color: rgba(255,255,255,0.85); font-size: 0.95rem;">请以最终订单状态为准</p>
+            </div>
+            
+            <div class="card-body" style="padding: 32px;">
+                <div style="background: var(--gray-50); border-radius: var(--radius-sm); padding: 20px; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                        <span style="color: var(--gray-500); font-size: 0.9rem;">订单编号</span>
+                        <span style="font-family: monospace; font-weight: 600; color: var(--gray-800);" th:text="${outTradeNo}"></span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <a href="/order/myOrders" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 1rem;">
+                        查看我的订单
+                    </a>
+                    <a href="/" class="btn btn-outline" style="width: 100%; padding: 14px; font-size: 1rem;">
+                        返回首页
+                    </a>
+                </div>
+                
+                <div style="margin-top: 24px; text-align: center;">
+                    <p style="color: var(--gray-400); font-size: 0.85rem;">支付结果将在1-5分钟内更新，请耐心等待</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <p>请以最终订单状态为准。<br>稍后可在“我的订单”中查看支付结果。</p>
-    <a href="/order/myOrders" class="btn">查看我的订单</a>
-</div>
 </body>
 </html>

@@ -2,44 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>商品列表</title>
+    <title>商品列表 - Commerce</title>
+    <link rel="stylesheet" href="/style.css">
     <style>
-        .product {
-            border: 1px solid #ccc;
-            margin: 10px;
-            padding: 10px;
-            width: 200px;
-            display: inline-block;
-            text-align: center;
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+            padding: 0 0 40px;
         }
-        .product img {
-            width: 150px;
-            height: 120px;
-            object-fit: cover;
-        }
-        .price {
-            color: red;
-            font-weight: bold;
+        
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
         }
     </style>
 </head>
 <body>
-<!-- 引入导航栏，从 session 获取 role -->
 <div th:replace="fragments :: navbar(${session.role})"></div>
 
-<h2>商品列表</h2>
-<div th:each="p : ${products}" class="product">
-    <img th:src="${p.imageUrl}" alt="商品图片"/>
-    <h4 th:text="${p.name}">商品名</h4>
-    <p class="price" th:text="'￥' + ${p.price}">价格</p>
-    <p>库存: <span th:text="${p.stock}"></span></p>
-    <p th:text="${p.description}">描述</p>
-    <!-- 加入购物车表单 -->
-    <form th:action="@{/cart/add}" method="post">
-        <input type="hidden" name="productId" th:value="${p.id}" />
-        <input type="number" name="quantity" value="1" min="1" style="width:50px;" />
-        <button type="submit">加入购物车</button>
-    </form>
+<section class="page-header">
+    <div class="container">
+        <h1>商品列表</h1>
+        <p>发现优质商品，享受购物乐趣</p>
+    </div>
+</section>
+
+<div class="container">
+    <div th:if="${#lists.isEmpty(products)}" class="empty-state">
+        <div class="empty-state-icon">📦</div>
+        <div class="empty-state-text">暂无商品</div>
+    </div>
+    
+    <div th:unless="${#lists.isEmpty(products)}" class="product-grid">
+        <div th:each="p : ${products}" class="product-card">
+            <div style="overflow: hidden;">
+                <img th:src="${p.imageUrl}" alt="商品图片" class="product-card-img"/>
+            </div>
+            <div class="product-card-body">
+                <h4 class="product-card-title" th:text="${p.name}">商品名</h4>
+                <p class="product-card-desc" th:text="${p.description}">描述</p>
+                <div class="product-card-footer">
+                    <div>
+                        <span class="product-card-price">￥<span th:text="${p.price}"></span></span>
+                        <span style="font-size: 0.75rem; color: var(--gray-400); margin-left: 8px;">库存: <span th:text="${p.stock}"></span></span>
+                    </div>
+                    <form th:action="@{/cart/add}" method="post" style="display: flex; align-items: center; gap: 8px;">
+                        <input type="hidden" name="productId" th:value="${p.id}" />
+                        <input type="number" name="quantity" value="1" min="1" style="width: 50px; padding: 6px 8px; border: 1.5px solid var(--gray-200); border-radius: 6px; font-size: 0.85rem;" />
+                        <button type="submit" class="btn btn-primary btn-sm">加入购物车</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

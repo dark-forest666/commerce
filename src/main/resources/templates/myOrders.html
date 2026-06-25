@@ -2,30 +2,65 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>我的订单</title>
-    <style>
-        table { width: 80%; margin: auto; border-collapse: collapse; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    </style>
+    <title>我的订单 - Commerce</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 <div th:replace="fragments :: navbar(${session.role})"></div>
-<h2>我的订单</h2>
-<table>
-    <tr><th>订单号</th><th>总金额</th><th>状态</th><th>创建时间</th><th>操作</th></tr>
-    <tr th:each="order : ${orders}">
-        <td th:text="${order.orderNo}"></td>
-        <td th:text="'￥' + ${order.totalAmount}"></td>
-        <td>
-            <span th:if="${order.status == 0}">待支付</span>
-            <span th:if="${order.status == 1}">已支付</span>
-            <span th:if="${order.status == 2}">已发货</span>
-            <span th:if="${order.status == 3}">已完成</span>
-            <span th:if="${order.status == 4}">已取消</span>
-        </td>
-        <td th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
-        <td><a th:href="@{/order/detail/{id}(id=${order.id})}">查看详情</a></td>
-    </tr>
-</table>
+
+<section class="page-header">
+    <div class="container">
+        <h1>我的订单</h1>
+        <p>查看您的订单记录</p>
+    </div>
+</section>
+
+<div class="container">
+    <div th:if="${#lists.isEmpty(orders)}" class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-text">暂无订单</div>
+        <a href="/products" class="btn btn-primary">去购物</a>
+    </div>
+    
+    <div th:unless="${#lists.isEmpty(orders)}">
+        <div class="card" style="margin-bottom: 20px;">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>订单列表</span>
+            </div>
+            <div class="card-body">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>订单号</th>
+                            <th>总金额</th>
+                            <th>状态</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td style="font-family: monospace; font-weight: 600;" th:text="${order.orderNo}"></td>
+                            <td style="font-weight: 700; color: var(--danger);">￥<span th:text="${order.totalAmount}"></span></td>
+                            <td>
+                                <span th:if="${order.status == 0}" class="badge badge-warning">待支付</span>
+                                <span th:if="${order.status == 1}" class="badge badge-primary">已支付</span>
+                                <span th:if="${order.status == 2}" class="badge badge-info">已发货</span>
+                                <span th:if="${order.status == 3}" class="badge badge-success">已完成</span>
+                                <span th:if="${order.status == 4}" class="badge badge-secondary">已取消</span>
+                            </td>
+                            <td th:text="${#dates.format(order.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td>
+                                <a th:href="@{/order/detail/{id}(id=${order.id})}" class="btn btn-primary btn-sm">查看详情</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
